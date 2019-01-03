@@ -68,19 +68,19 @@ void setup() {
 
 void loop() {
 
-  delay (1000);
-
-  float temperature = getTemperature(ds); // Get the temperature from the sensor in °C
+  float temperature = getTemperature(ds); // Get the temperature from the sensor in degree Celsius (750 ms delay)
   Serial.println(temperature);
 
-  int t = (int)(temperature + 0.5); // Convert the temperature to integer, round half away from zero
-  if (t > 0) // Check for the sign 
-    digitalWrite(SGN, 1); // Turn the Neon lamp On
+  int T = (int)(temperature >= 0.0 ? (temperature + 0.5) : (temperature - 0.5)); // Convert the temperature to integer, round half away from zero
+ 
+  if (T >= 0) // Check for the sign 
+    digitalWrite(SGN, 0); // Turn the Neon lamp Off
   else 
-    digitalWrite(SGN, 0);
+    digitalWrite(SGN, 1);
   // Display the 1st and 2nd digit of the temperature on the Nixie tube N1 and N2  
-  nixieWrite(N1_A, N1_B, N1_C, N1_D, (t / 10) % 10);
-  nixieWrite(N2_A, N2_B, N2_C, N2_D, t % 10);
+  T = abs(T);
+  nixieWrite(N1_A, N1_B, N1_C, N1_D, (T / 10) % 10);
+  nixieWrite(N2_A, N2_B, N2_C, N2_D, T % 10);
 }
 
 
