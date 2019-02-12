@@ -16,6 +16,12 @@
 
 #include <OneWire.h>
 
+#define SLOT_MACHINE_EFFECT true  // Enable slot-machine effect for anti-cathode poisoning  
+
+// Variables for timing 
+unsigned long t = 0; 
+unsigned long t_prev = 0; 
+
 const int EN = A0;
 OneWire ds(A1); // Signal pin of the temperature sensor on A1
 
@@ -66,8 +72,8 @@ void setup() {
 }
 
 
-void loop() {
-
+void loop() 
+{
   float temperature = getTemperature(ds); // Get the temperature from the sensor in degree Celsius (750 ms delay)
   Serial.println(temperature);
 
@@ -81,6 +87,19 @@ void loop() {
   T = abs(T);
   nixieWrite(N1_A, N1_B, N1_C, N1_D, (T / 10) % 10);
   nixieWrite(N2_A, N2_B, N2_C, N2_D, T % 10);
+
+  #if (SLOT_MACHINE_EFFECT)
+    t = millis();
+    if (t - t_prev > 60000) { // Do slot-machine effect every 60 seconds
+      t_prev = t;
+      for (int i = 0; i < 50; i++) {
+        nixieWrite(N1_A, N1_B, N1_C, N1_D, (i + 1) % 10);
+        nixieWrite(N2_A, N2_B, N2_C, N2_D, i % 10);
+        delay(100); 
+      }
+    }
+  #endif
+  
 }
 
 
