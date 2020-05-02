@@ -23,7 +23,7 @@ unsigned long t = 0;
 unsigned long t_prev = 0; 
 
 const int EN = A0;
-OneWire ds(A1); // Signal pin of the temperature sensor on A1
+OneWire ds(A1); // Data pin of the fist temperature sensor on A1. Change to A2 for second temperature sensor
 
 // Pin for the minus sign Neon lamp
 const int SGN = 9;
